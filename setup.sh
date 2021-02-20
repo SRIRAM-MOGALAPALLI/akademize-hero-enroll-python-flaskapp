@@ -14,4 +14,4 @@ source .venv/bin/activate
 python -m pip install pipenv
 
 # Install dependencies
-# python -m pipenv install -r requirements.txt
+python -m pipenv install --pre --dev
