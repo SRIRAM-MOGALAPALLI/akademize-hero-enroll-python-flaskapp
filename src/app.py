@@ -1,12 +1,22 @@
 """Flask Restful App.
 
-Followed the pattern from here: https://flask-restx.readthedocs.io/en/latest/example.html # noqa E501
+Followed the detail documented tutorial
+Updated at May 07, 2020
+https://rahmanfadhil.com/flask-rest-api/
+Differences from the tutorial:
+- Flask0restx instead of flat-restful
+- Hero Object instead of (Blog)Post
 """
-from flask import Flask
-from flask_restx import Api, Resource, fields
+from flask import Flask, request
+from flask_restx import Api, Resource
 from werkzeug.middleware.proxy_fix import ProxyFix
-from HeroDAO import HeroDAO
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
+
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///heros.db'
+db = SQLAlchemy(app)
+ma = Marshmallow(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 api = Api(
     app,
@@ -16,61 +26,82 @@ api = Api(
     doc="/",
     validate=True,
 )
-ns = api.namespace('heros', description='Hero operations')
-DAO = HeroDAO()
-
-hero_model = api.model('Hero', {
-    'id': fields.String(readonly=True, description='The hero unique identifier'),
-    'name': fields.String(required=True, description='The hero name'),
-    'alter_ego': fields.String(required=True, description='The hero alter ego')
-})
 
 
-@ns.route('/')
-class HeroList(Resource):
-    """Shows a list of all heros.
+class Hero(db.Model):
+    """Hero Class."""
 
-    And lets you POST to add new heros.
-    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    alter_ego = db.Column(db.String(50))
 
-    @ns.doc('list_heros')
-    @ns.marshal_list_with(hero_model)
+    def __repr__(self):
+        """Represent the Object in String format."""
+        return '<Post %s>' % self.name
+
+
+class HeroSchema(ma.Schema):
+    """Hero Schema Class."""
+
+    class Meta:
+        """Express the Schema Meta object."""
+
+        fields = ("id", "name", "alter_ego")
+        model = Hero
+
+
+hero_schema = HeroSchema()
+heros_schema = HeroSchema(many=True)
+
+
+class HeroListResource(Resource):
+    """HeroListResource."""
+
     def get(self):
-        """List all Heros."""
-        return DAO.heros
+        """Get all available heros."""
+        posts = Hero.query.all()
+        return heros_schema.dump(posts)
 
-    @ns.doc('create_hero')
-    @ns.expect(hero_model)
-    @ns.marshal_with(hero_model, code=201)
+    # TODO: Annotate this to get the param schema in swagger ui
+    # Find the right config to use marshmallow schema HeroSchema
     def post(self):
         """Create a new hero."""
-        return DAO.create(api.payload), 201
+        new_hero = Hero(
+            name=request.json['name'],
+            alter_ego=request.json['alter_ego']
+        )
+        db.session.add(new_hero)
+        db.session.commit()
+        return hero_schema.dump(new_hero)
 
 
-@ns.route('/<string:id>')
-@ns.response(404, 'Hero not found')
-@ns.param('id', 'The hero identifier')
-class Hero(Resource):
-    """Show a single hero.
+class HeroResource(Resource):
+    """Hero Resource Class."""
 
-    And lets you delete them.
-    """
+    def get(self, hero_id):
+        """Get Hero With ID."""
+        hero = Hero.query.get_or_404(hero_id)
+        return hero_schema.dump(hero)
 
-    @ns.doc('get_hero')
-    @ns.marshal_with(hero_model)
-    def get(self, id):
-        """Fetch a given resource."""
-        return DAO.get(id, api)
+    def patch(self, hero_id):
+        """Update a Hero."""
+        hero = Hero.query.get_or_404(hero_id)
 
-    @ns.doc('delete_hero')
-    @ns.response(204, 'Hero deleted')
-    def delete(self, id):
-        """Delete a task given its identifier."""
-        DAO.delete(id, api)
+        if 'name' in request.json:
+            hero.name = request.json['name']
+        if 'content' in request.json:
+            hero.alter_ego = request.json['alter_ego']
+
+        db.session.commit()
+        return hero_schema.dump(hero)
+
+    def delete(self, hero_id):
+        """Delete a hero."""
+        hero = Hero.query.get_or_404(hero_id)
+        db.session.delete(hero)
+        db.session.commit()
         return '', 204
 
-    @ns.expect(hero_model)
-    @ns.marshal_with(hero_model)
-    def put(self, id):
-        """Update a task given its identifier."""
-        return DAO.update(id, api.payload, api)
+
+api.add_resource(HeroListResource, '/heros')
+api.add_resource(HeroResource, '/heros/<int:hero_id>')

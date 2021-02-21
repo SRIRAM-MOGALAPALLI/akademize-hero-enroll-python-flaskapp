@@ -1,0 +1,44 @@
+###
+
+# @name Get_Heros_Curl_Command
+curl http://localhost:5000/heros
+###
+# @name Get_Heros_HTTP
+http://localhost:5000/heros
+
+###
+# @name Create_Hero_CUrl
+curl http://localhost:5000/heros \
+-X POST \
+    -H "Content-Type: application/json" \
+    -d '{"name":"Super Man", "alter_ego":"Clark"}'
+###
+# @name Create_Hero_HTTP
+POST http://localhost:5000/heros HTTP/1.1
+content-type: application/json
+
+{
+    "name":"Wonder Baby",
+    "alter_ego":"Vihari"
+}
+
+###
+# @name GET_Hero_HTTP
+GET http://localhost:5000/heros/2
+
+###
+# @name GET_Hero_HTTP_Not_Found_404_Error
+GET http://localhost:5000/heros/1888
+
+
+###
+# @name Path_Hero
+
+curl http://localhost:5000/heros/2 \
+    -X PATCH \
+    -H "Content-Type: application/json" \
+    -d '{"name":"Super Man1", "alter_ego":"Clark Kent"}'
+
+###
+# @name Delete_Hero
+curl http://localhost:5000/heros/3 -X DELETE

@@ -6,13 +6,18 @@ Hero Enroll Service.
 This application was created in series of step by step development
 
 1. [Crude way of creating APIs, write the data to JSON file](https://github.com/sravanrekandar/akademize-hero-enroll-python-flaskapp/tree/chapter01-json-store)
-2. **Current implementation** Using DAO (Data Access Objects)
-  and Restful (GET, POST, PUT and DELETE) apis.
-  [Reference from Flast RestX](https://flask-restx.readthedocs.io/en/latest/example.html)
+2. [Using DAO (Data Access Objects)
+  and Restful (GET, POST, PUT and DELETE) apis.](https://github.com/sravanrekandar/akademize-hero-enroll-python-flaskapp/blob/chapter02-flaskrestx-approach/src/app.py)
+
+    [Reference from Flask RestX](https://flask-restx.readthedocs.io/en/latest/example.html)
+
+3. **Current implementation**. Using [Sqllite DB](https://www.sqlite.org/index.html) and [SQLAlchemy](https://www.sqlalchemy.org)
 
 ## Prerequisites
 
 - Python >= 3.7
+- [VSCode IDE](https://code.visualstudio.com/)
+  - [VS CODE extension Rest Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 
 ## Env Setup
 
@@ -32,13 +37,6 @@ $ ./start.sh
  * Debugger PIN: 914-428-710
 ```
 
-Navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000) to view the apis in [Swagger UI](https://swagger.io/tools/swagger-ui/)
-
-![Swagger UI](images/swagger-ui.png)
-
 ## APIs
 
-- Create
-- Retrieve
-- Update
-- Delete
+Open ```requests.http``` in VSCode

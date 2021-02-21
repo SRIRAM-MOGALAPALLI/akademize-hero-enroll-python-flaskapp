@@ -15,3 +15,6 @@ python -m pip install pipenv
 
 # Install dependencies
 python -m pipenv install --pre --dev
+
+# Create DB
+python -m src.scripts.create_db

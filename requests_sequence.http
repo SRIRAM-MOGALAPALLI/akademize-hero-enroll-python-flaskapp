@@ -1,0 +1,58 @@
+###
+# @name Get_Heros_HTTP
+# @description Returns an empty array
+http://localhost:5000/heros
+
+
+###
+# @name Create_Hero_1
+POST http://localhost:5000/heros HTTP/1.1
+content-type: application/json
+
+{
+    "name":"Wonder Baby",
+    "alter_ego":"Vihari"
+}
+
+###
+# @name Create_Hero_1
+POST http://localhost:5000/heros HTTP/1.1
+content-type: application/json
+
+{
+    "name":"Super Girl",
+    "alter_ego":"Anmol"
+}
+
+###
+# @name Get_Heros_HTTP
+# @description Returns an Two Heros
+http://localhost:5000/heros
+
+
+###
+# @name Update_Hero_Super_Baby
+
+curl http://localhost:5000/heros/1 \
+    -X PATCH \
+    -H "Content-Type: application/json" \
+    -d '{"name":"Super Baby", "alter_ego":"Vikrama Vihari"}'
+
+###
+# @name GET_Hero_Super_Baby
+GET http://localhost:5000/heros/1
+
+###
+# @name Get_Heros_HTTP
+# @description Returns an Two Heros
+http://localhost:5000/heros
+
+
+###
+# @name Delete_Hero
+curl http://localhost:5000/heros/2 -X DELETE
+
+###
+# @name Get_Heros_HTTP
+# @description Returns an Two Heros
+http://localhost:5000/heros
