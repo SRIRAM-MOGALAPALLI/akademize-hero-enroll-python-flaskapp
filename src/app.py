@@ -4,7 +4,7 @@ Followed the detail documented tutorial
 Updated at May 07, 2020
 https://rahmanfadhil.com/flask-rest-api/
 Differences from the tutorial:
-- Flask0restx instead of flat-restful
+- Flask-restx instead of flak-restful
 - Hero Object instead of (Blog)Post
 """
 from flask import Flask, request
@@ -37,7 +37,7 @@ class Hero(db.Model):
 
     def __repr__(self):
         """Represent the Object in String format."""
-        return '<Post %s>' % self.name
+        return '<Hero %s>' % self.name
 
 
 class HeroSchema(ma.Schema):

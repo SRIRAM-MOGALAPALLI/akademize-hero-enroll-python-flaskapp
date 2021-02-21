@@ -15,7 +15,7 @@ content-type: application/json
 }
 
 ###
-# @name Create_Hero_1
+# @name Create_Hero_2
 POST http://localhost:5000/heros HTTP/1.1
 content-type: application/json
 
@@ -50,7 +50,7 @@ http://localhost:5000/heros
 
 ###
 # @name Delete_Hero
-curl http://localhost:5000/heros/2 -X DELETE
+curl http://localhost:5000/heros/1 -X DELETE
 
 ###
 # @name Get_Heros_HTTP
